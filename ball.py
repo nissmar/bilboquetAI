@@ -3,7 +3,6 @@ class Ball:
         self.pos = complex(x, y)
         self.v = complex(0, 0)
         self.a = complex(0, 0)
-        self.m = 1
 
     def set_pos(self, tuple):
         self.pos = complex(tuple[0], tuple[1])
@@ -17,6 +16,9 @@ class Ball:
 
     def get_pos(self):
         return self.pos.real, self.pos.imag
+
+    def get_speed(self):
+        return self.v.real, self.v.imag
 
     def apply_accel(self, dt, scale):
         self.v += self.a * dt/scale
@@ -53,5 +55,6 @@ class Cup(Ball):
     def is_win(self, ball):
         if ball.v.imag < 0:
             return False
-        proj = ball.pos - ball.v*(ball.pos.imag-self.pos.imag)/ball.v.imag
+        proj = ball.pos - ball.v/ball.v.imag * \
+            (ball.pos.imag-self.pos.imag+self.r)
         return abs(proj.real-self.pos.real) < self.r

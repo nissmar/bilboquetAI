@@ -9,10 +9,10 @@ class Game():
         self.cup = Cup(0, 0, 30)
         self.string = String(self.cup, self.ball)
         self.scale = scale
-        self.reset()
 
-    def reset(self):
-        self.ball.set_pos(self.cup.get_pos())
+    def reset(self, pos):
+        self.cup.set_pos(pos)
+        self.ball.set_pos(pos)
         self.ball.pos += 1.0j*self.string.length
         self.ball.immobilize()
         self.ball.fall()
@@ -22,7 +22,7 @@ class Game():
         self.cup.set_pos(tuple)
 
     def move(self, dt):
-        """move the postion of the element during dt. Returns 'win' 'loose' or None"""
+        """move the element during dt. Returns 'win' 'loose' or None"""
         self.ball.apply_accel(dt, self.scale)
         self.string.apply_tension(dt)
         if self.cup.in_triangle(self.ball, dt):
@@ -30,3 +30,7 @@ class Game():
                 return 'win'
             return 'loose'
         return
+
+    def observe(self):
+        """returns the positions of the elements"""
+        return self.ball.get_pos() + self.ball.get_speed() + self.cup.get_pos()
