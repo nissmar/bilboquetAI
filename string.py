@@ -3,9 +3,9 @@ import math
 
 
 class String:
-    def __init__(self, cup, ball):
+    def __init__(self, cup, ball, length=200):
         self.forceConstant = 10  # Nm^-1
-        self.length = 200
+        self.length = length
         self.lastCalcDistance = -1
         self.damping = 0.5
         self.cup = cup

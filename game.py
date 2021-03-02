@@ -3,11 +3,11 @@ from string import String
 
 
 class Game():
-    def __init__(self, scale=0.53/700):
+    def __init__(self, scale=0.53/700, string_length=200, cup_size=30):
         self.ball = Ball(0, 0)
         self.ball.fall()
-        self.cup = Cup(0, 0, 30)
-        self.string = String(self.cup, self.ball)
+        self.cup = Cup(0, 0, cup_size)
+        self.string = String(self.cup, self.ball, string_length)
         self.scale = scale
 
     def reset(self, pos):
