@@ -38,6 +38,11 @@ class Cup(Ball):
         super().__init__(x, y)
         self.r = r
 
+    def set_pos(self, tuple):
+        npos = complex(tuple[0], tuple[1])
+        self.v = npos-self.pos
+        self.pos = npos
+
     def triangle(self):
         x, y = self.get_pos()
         return [(x, y), (x+self.r, y-self.r), (x-self.r, y-self.r)]

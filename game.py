@@ -33,4 +33,4 @@ class Game():
 
     def observe(self):
         """returns the positions of the elements"""
-        return self.ball.get_pos() + self.ball.get_speed() + self.cup.get_pos()
+        return self.ball.get_pos() + self.ball.get_speed() + self.cup.get_pos() + self.cup.get_speed()
