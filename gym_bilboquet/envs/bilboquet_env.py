@@ -6,6 +6,9 @@ import gym
 from gym import error, spaces, utils
 import numpy as np
 
+pygame.init()
+pygame.display.set_mode((1200, 700))
+
 
 class GameAI(gym.Env):
 
