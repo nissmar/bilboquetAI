@@ -5,12 +5,12 @@ import pygame
 
 def random_agent(episodes=100):
     env = gym.make("bilboquet-v0")
-    env.reset(pygame.mouse.get_pos())
+    env.reset((300, 300))
     env.render()
     for e in range(episodes):
         action = env.action_space.sample()
-        print(env.observe())
-        state, reward, done = env.step(tuple(action))
+        # print(env.observe())
+        state, reward, done = env.step(action)
         env.render()
         # print(env.qobserve())
         if done:

@@ -9,7 +9,7 @@ import numpy as np
 
 class GameAI(gym.Env):
 
-    def __init__(self, scale=0.53/700, string_length=200, cup_size=30):
+    def __init__(self, scale=0.53/700, string_length=200, cup_size=30, amplitude=5):
         self.ball = Ball(0, 0)
         self.ball.fall()
         self.cup = Cup(0, 0, cup_size)
@@ -27,7 +27,7 @@ class GameAI(gym.Env):
         self.textwin = self.myfont.render('WIN', False, (255, 255, 255))
         self.textloose = self.myfont.render('LOSE', False, (255, 255, 255))
         self.action_space = spaces.Box(
-            np.array([-5, -5]), np.array([+5, +5]), dtype=np.float32)
+            np.array([-amplitude, -amplitude], dtype=np.float32), np.array([amplitude, amplitude], dtype=np.float32))
 
     def reset(self, pos):
         self.cup.set_pos(pos)
@@ -72,8 +72,8 @@ class GameAI(gym.Env):
         return self.ball.get_pos() + self.ball.get_speed() + self.cup.get_pos()
 
     def step(self, action):
-
-        self.set_cup(action)
+        x, y = self.cup.get_pos()
+        self.set_cup((x+action[0], y+action[1]))
         score = self.reward(self.move(self.timestep))
         done = False
 
