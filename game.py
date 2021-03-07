@@ -40,9 +40,9 @@ class Game():
     def reward(self):
         bp = self.ball.get_pos()
         cp = self.cup.get_pos()
-        v = (cp[0]-bp[0],cp[1]-bp[1])
+        v = (cp[0]-bp[0], cp[1]-bp[1])
         r = sqrt(v[0]**2+v[1]**2)/self.string.length
-        theta = np.arctan2(v[0],v[1])
+        theta = np.arctan2(v[0], v[1])
         if cos(theta) > 0:
             if r > 0:
                 return cos(theta)/r
