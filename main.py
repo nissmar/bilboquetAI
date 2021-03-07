@@ -3,7 +3,7 @@ import pygame
 import os
 
 # import files
-from game import Game
+from gym_bilboquet.envs.bilboquet_env import GameAI
 
 # pygame
 pygame.init()
@@ -18,7 +18,7 @@ textwin = myfont.render('WIN', False, (255, 255, 255))
 textloose = myfont.render('LOOSE', False, (255, 255, 255))
 
 # physics
-game = Game(scale)
+game = GameAI(scale)
 reset = True
 
 while not done:
@@ -37,6 +37,7 @@ while not done:
 
     game.set_cup(pygame.mouse.get_pos())
     res = game.move(deltaT)
+    print(game.reward(res))
     # print(game.observe())
     # print(game.reward())
 

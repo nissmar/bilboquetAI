@@ -13,7 +13,7 @@ pygame.display.set_mode((1200, 700))
 
 class GameAI(gym.Env):
 
-    def __init__(self, scale=0.53/700, string_length=200, cup_size=30, amplitude=20):
+    def __init__(self, scale=0.53/700, string_length=200, cup_size=30, amplitude=10):
         self.ball = Ball(0, 0)
         self.ball.fall()
         self.cup = Cup(0, 0, cup_size)
@@ -30,11 +30,12 @@ class GameAI(gym.Env):
         self.myfont = pygame.font.SysFont('FUTURA', 100)
         self.textwin = self.myfont.render('WIN', False, (255, 255, 255))
         self.textloose = self.myfont.render('LOSE', False, (255, 255, 255))
-        self.action_space = spaces.Box(
-            np.array([-amplitude, -amplitude], dtype=np.float32), np.array([amplitude, amplitude], dtype=np.float32))
+        self.amplitude = amplitude
+        self.action_space = spaces.Discrete(5)
 
-        self.observation_space = spaces.Box(
-            np.array([0, 0, -1000, -1000, 0, 0]), np.array([1200, 700, 0, 0, 1200, 700]))
+        high = np.array(
+            [self.string.length, self.string.length], dtype=np.float32)
+        self.observation_space = spaces.Box(-high, high, dtype=np.float32)
 
     def reset(self, pos=(300, 300)):
         self.cup.set_pos(pos)
@@ -61,58 +62,33 @@ class GameAI(gym.Env):
     def reward(self, state):
         bp = self.ball.get_pos()
         cp = self.cup.get_pos()
-        r = self.cup.r
-
         if state == "win":
-            return 10
-
+            return 10000
         if state == "lose":
-            return -10
-
-        if state == None:
-            """
-            if bp[1] > cp[1]-r:
-                return 0
-            else:
-                return 1/(1+abs(bp[0]-cp[0]))
-            """
-            v = (cp[0]-bp[0], cp[1]-bp[1])
-            r = sqrt(v[0]**2+v[1]**2)/self.string.length
-            theta = np.arctan2(v[0], v[1])
-            if cos(theta) > 0:
-                if r > 0:
-                    return cos(theta)/r
-                return 0
-            return (cp[1]-bp[1])/self.string.length
-
-    def reward_2(self, state):
-        bp = self.ball.get_pos()
-        cp = self.cup.get_pos()
-        r = self.cup.r
-
-        if state == "win":
-            return 10
-
-        if state == "lose":
-            return -10
-
-        s = 0.01 * (cp[1]-bp[1])
-        if bp[1] > cp[1]-r:
-            s += 1/(1+abs(bp[0]-cp[0]))
+            return -1
+        if bp[1] < cp[1]-self.cup.r:
+            s = self.string.length*10/(1+abs(bp[0]-cp[0]))
+        else:
+            s = abs((cp[0]-bp[0]))
         return s
 
     def observe(self):
         """returns the positions of the elements"""
-        return self.ball.get_pos() + self.ball.get_speed() + self.cup.get_pos()
+        z = self.ball.pos-self.cup.pos
+        array = np.array([z.real, z.imag])
+        assert self.observation_space.contains(array)
+        return array
 
     def step(self, action):
+        action = [[self.amplitude, 0], [-self.amplitude, 0],
+                  [0, self.amplitude], [0, -self.amplitude], [0, 0]][action]
         x, y = self.cup.get_pos()
-        self.set_cup((x+action[0], y+action[1]))
-        score = self.reward(self.move(self.timestep))
-        done = False
 
-        if (score == 2 or score == -1):
-            done = True
+        if 0 <= x+action[0] <= 1200 and 0 <= y+action[1] <= 700:
+            self.set_cup((x+action[0], y+action[1]))
+        state = self.move(self.timestep)
+        score = self.reward(state)
+        done = not(state is None)
 
         return self.observe(), score, done,  {}
 
