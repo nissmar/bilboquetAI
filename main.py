@@ -38,6 +38,7 @@ while not done:
     game.set_cup(pygame.mouse.get_pos())
     res = game.move(deltaT)
     # print(game.observe())
+    # print(game.reward())
 
     # Draw elements
     screen.fill((0, 0, 0))

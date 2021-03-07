@@ -5,6 +5,7 @@ import pygame
 import gym
 from gym import error, spaces, utils
 import numpy as np
+from math import sqrt, cos
 
 pygame.init()
 pygame.display.set_mode((1200, 700))
@@ -59,16 +60,26 @@ class GameAI(gym.Env):
         r = self.cup.r
 
         if state == "win":
-            return 2
+            return 10
 
         if state == "lose":
-            return -1
+            return -10
 
         if state == None:
+            """
             if bp[1] > cp[1]-r:
                 return 0
             else:
                 return 1/(1+abs(bp[0]-cp[0]))
+            """
+            v = (cp[0]-bp[0],cp[1]-bp[1])
+            r = sqrt(v[0]**2+v[1]**2)/self.string.length
+            theta = np.arctan2(v[0],v[1])
+            if cos(theta) > 0:
+                if r > 0:
+                    return cos(theta)/r
+                return 0
+            return (cp[1]-bp[1])/self.string.length
 
     def observe(self):
         """returns the positions of the elements"""
