@@ -1,5 +1,6 @@
 import numpy as np
 from numpy.random import rand, poisson
+from math import cos, sin, pi
 import pickle
 
 """
@@ -69,8 +70,11 @@ def random_action(agent):
     max_control_speed = agent['max_control_speed']
     average_speed = agent['average_speed']
     speed_resolution = agent['speed_resolution']
-    vx = max(0,min(max_control_speed, average_speed + POISSON_VARIANCE_AMPLIFICATION * (poisson(lam=average_speed)-average_speed)))
-    vy = max(0,min(max_control_speed, average_speed + POISSON_VARIANCE_AMPLIFICATION * (poisson(lam=average_speed)-average_speed)))
+    speed = average_speed + POISSON_VARIANCE_AMPLIFICATION * (poisson(average_speed)-average_speed)
+    v = max(0,min(max_control_speed, speed))
+    theta = pi * (-1 + 2 * rand())
+    vx = v * cos(theta)
+    vy = v * sin(theta)
     agent_action = "$".join([str(discretize(vx,speed_resolution)),str(discretize(vy,speed_resolution))])
     return agent_action
 
@@ -80,7 +84,7 @@ def decode_agent_action(agent, agent_action):
     vx,vy = map(lambda x: float(x), agent_action.split('$'))
     vx = to_continuous(vx, speed_resolution)
     vy = to_continuous(vy, speed_resolution)
-    return (vx*timestep, vy*timestep)
+    return (vx, vy)
 
 def choose_action(agent, state):
     action_values = agent['action_values']

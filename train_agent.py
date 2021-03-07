@@ -4,9 +4,10 @@ from math import ceil
 
 from agents.agent_v1 import new_agent, notify_env_answer, save_agent, set_training_params
 
-NUMBER_OF_EPISODES = 1
+NUMBER_OF_EPISODES = 100
 MAX_STEPS_BY_EPISODE = 10000
-RENDER = True
+RENDER = False
+RESET_AGENT = True
 INITIAL_POS = (500,300)
 
 SPATIAL_RESOLUTION_DIVIDED_BY_CUP_SIZE = 0.2
@@ -37,12 +38,12 @@ timestep = env.timestep
 spatial_resolution = SPATIAL_RESOLUTION_DIVIDED_BY_CUP_SIZE * env.cup.r
 speed_resolution = SPEED_RESOLUTION_DIVIDED_BY_CUP_SIZE * env.cup.r
 avarage_speed = AVERAGE_SPEED_DIVIDED_BY_CUP_SIZE * env.cup.r
-max_move = env.action_space.high[0]
+max_move = 1 #env.action_space.high[0]
 number_of_steps_between_agent_moves = ceil(spatial_resolution/(speed_resolution*timestep))
 max_control_speed = max_move/timestep
 
 
-agent = new_agent(timestep=number_of_steps_between_agent_moves*timestep, spatial_resolution=10, average_speed = avarage_speed, max_control_speed=max_control_speed, reset = False)
+agent = new_agent(timestep=number_of_steps_between_agent_moves*timestep, spatial_resolution=10, average_speed = avarage_speed, max_control_speed=max_control_speed, reset = RESET_AGENT)
 set_training_params(agent, epsilon = epsilon, alpha = alpha, gamma = gamma)
 for _ in range(NUMBER_OF_EPISODES):
     env.reset(INITIAL_POS)
