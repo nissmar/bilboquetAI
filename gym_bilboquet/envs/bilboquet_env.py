@@ -43,7 +43,7 @@ class GameAI(gym.Env):
         if continuous:
             self.action_space = spaces.Box(-1, 1, (2,), dtype=np.float32)
         else:
-            self.action_space = spaces.Discrete(5)
+            self.action_space = spaces.Discrete(3)
 
         self.observation_space = spaces.Box(-1, 1, (2,), dtype=np.float32)
 
@@ -106,8 +106,8 @@ class GameAI(gym.Env):
             action[0] *= self.amplitude
             action[1] *= self.amplitude
         else:
-            action = [[self.amplitude, 0], [-self.amplitude, 0],
-                      [0, self.amplitude], [0, -self.amplitude], [0, 0]][action]
+            action = [[self.amplitude, 0],
+                      [-self.amplitude, 0], [0, 0]][action]
         x, y = self.cup.get_pos()
 
         fac = 0.1

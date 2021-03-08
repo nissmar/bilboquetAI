@@ -19,11 +19,16 @@ def random_agent(episodes=100):
             break
 
 
-def trained_agent(episodes=100, load=None):
-    env = gym.make("bilboquet-v0", continuous=True, amplitude=10)
+def trained_agent(episodes=100,  continuous=True, load=None):
+    env = gym.make("bilboquet-v0", continuous=continuous, amplitude=10)
     env.reset((300, 300))
 
     if load is None:
+        # discrete
+        # model = PPO('MlpPolicy', env, verbose=1,
+        #         learning_rate=0.001, n_steps=500)
+
+        # continuous
         model = PPO('MlpPolicy', env, verbose=1,
                     learning_rate=0.0005, n_steps=500)
         model.learn(total_timesteps=10000)
@@ -45,4 +50,4 @@ def trained_agent(episodes=100, load=None):
 
 
 if __name__ == "__main__":
-    trained_agent(500, 'continuous')
+    trained_agent(500, True, 'continuous')
