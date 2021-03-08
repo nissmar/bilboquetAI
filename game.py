@@ -24,13 +24,13 @@ class Game():
         self.cup.set_pos(tuple)
 
     def move(self, dt):
-        """move the element during dt. Returns 'win' 'loose' or None"""
+        """move the element during dt. Returns 'win' 'lose' or None"""
         self.ball.apply_accel(dt, self.scale)
         self.string.apply_tension(dt)
         if self.cup.in_triangle(self.ball, dt):
             if self.cup.is_win(self.ball):
                 return 'win'
-            return 'loose'
+            return 'lose'
         return
 
     def observe(self):

@@ -15,7 +15,7 @@ last_points = []
 pygame.font.init()
 myfont = pygame.font.SysFont('FUTURA', 100)
 textwin = myfont.render('WIN', False, (255, 255, 255))
-textloose = myfont.render('LOOSE', False, (255, 255, 255))
+textlose = myfont.render('LOSE', False, (255, 255, 255))
 
 # physics
 game = GameAI(scale)
@@ -34,10 +34,9 @@ while not done:
     if reset:
         game.reset(pygame.mouse.get_pos())
         reset = False
-
     game.set_cup(pygame.mouse.get_pos())
     res = game.move(deltaT)
-    print(game.reward(res))
+    # print(deltaT)
     # print(game.observe())
     # print(game.reward())
 
@@ -61,10 +60,11 @@ while not done:
 
     if res == 'win':
         screen.blit(textwin, (10, 10))
-    if res == 'loose':
-        screen.blit(textloose, (10, 10))
+    if res == 'lose':
+        screen.blit(textlose, (10, 10))
     pygame.display.flip()
     if res != None:
+        # print(res)
         pygame.time.wait(800)
         reset = True
         clock.tick()

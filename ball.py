@@ -38,9 +38,9 @@ class Cup(Ball):
         super().__init__(x, y)
         self.r = r
 
-    def set_pos(self, tuple):
+    def set_pos(self, tuple, deltaT=0.01):
         npos = complex(tuple[0], tuple[1])
-        self.v = npos-self.pos
+        self.v = (npos-self.pos)/deltaT
         self.pos = npos
 
     def triangle(self):
@@ -51,15 +51,16 @@ class Cup(Ball):
         triangle = [complex(e[0], e[1]) for e in self.triangle()]
         N = 3
         A = ball.pos
-        B = ball.pos - ball.v*dt
+        B = ball.pos - (ball.v-self.v)*dt
         for i in range(3):
             if intersect(A, B, triangle[i % 3], triangle[(i+1) % 3]):
                 return True
         return False
 
     def is_win(self, ball):
-        if ball.v.imag < 0:
+        v = ball.v - self.v
+        if v.imag < 0:
             return False
-        proj = ball.pos - ball.v/ball.v.imag * \
+        proj = ball.pos - v/v.imag * \
             (ball.pos.imag-self.pos.imag+self.r)
         return abs(proj.real-self.pos.real) < self.r

@@ -20,19 +20,20 @@ def random_agent(episodes=100):
 
 
 def trained_agent(episodes=100, load=None):
-    env = gym.make("bilboquet-v0")
+    env = gym.make("bilboquet-v0", continuous=True, amplitude=10)
     env.reset((300, 300))
 
     if load is None:
         model = PPO('MlpPolicy', env, verbose=1,
-                    learning_rate=0.001)
+                    learning_rate=0.0005, n_steps=500)
         model.learn(total_timesteps=10000)
-        # model.save("name")
+        model.save("test")
+        print('DONE')
+        obs = env.reset()
 
     else:
         model = PPO.load(load)
-
-    obs = env.reset()
+        obs = env.reset(True)
     for i in range(episodes):
         action, _states = model.predict(obs, deterministic=True)
         # print(action)
@@ -44,4 +45,4 @@ def trained_agent(episodes=100, load=None):
 
 
 if __name__ == "__main__":
-    trained_agent(1000, "ppo_working")
+    trained_agent(500)
