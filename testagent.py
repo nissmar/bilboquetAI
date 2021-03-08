@@ -33,7 +33,7 @@ def trained_agent(episodes=100, load=None):
 
     else:
         model = PPO.load(load)
-        obs = env.reset(True)
+        obs = env.reset()
     for i in range(episodes):
         action, _states = model.predict(obs, deterministic=True)
         # print(action)
@@ -45,4 +45,4 @@ def trained_agent(episodes=100, load=None):
 
 
 if __name__ == "__main__":
-    trained_agent(500)
+    trained_agent(500, 'continuous')
