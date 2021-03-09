@@ -19,7 +19,7 @@ def random_agent(episodes=100):
             break
 
 
-def trained_agent(episodes=100,  continuous=True, load=None):
+def trained_agent(episodes=100,  continuous=True, load=None, save_name = "test", ent_coef = 0.01):
     env = gym.make("bilboquet-v0", continuous=continuous, amplitude=10)
     env.reset((300, 300))
 
@@ -29,10 +29,10 @@ def trained_agent(episodes=100,  continuous=True, load=None):
         #         learning_rate=0.001, n_steps=500)
 
         # continuous
-        model = PPO('MlpPolicy', env, verbose=1,
-                    learning_rate=0.0005, n_steps=500)
+        model = PPO('MlpPolicy', env, verbose=1, batch_size= 50,
+                    learning_rate=0.0005, n_steps=500, ent_coef=ent_coef, tensorboard_log="./ppo_bilboquet_tensorboard/")
         model.learn(total_timesteps=10000)
-        model.save("test")
+        model.save(save_name)
         print('DONE')
         obs = env.reset()
 
@@ -50,4 +50,4 @@ def trained_agent(episodes=100,  continuous=True, load=None):
 
 
 if __name__ == "__main__":
-    trained_agent(500, True, 'continuous')
+    trained_agent(episodes = 500, continuous= True, load= 'test0.01.zip', ent_coef = 0.01)
