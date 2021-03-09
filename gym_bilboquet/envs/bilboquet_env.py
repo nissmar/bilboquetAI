@@ -6,7 +6,7 @@ import gym
 from gym import error, spaces, utils
 import numpy as np
 from math import sqrt, cos
-
+from cmath import phase
 
 WIDTH = 1200
 HEIGHT = 700
@@ -45,7 +45,7 @@ class GameAI(gym.Env):
         else:
             self.action_space = spaces.Discrete(3)
 
-        self.observation_space = spaces.Box(-1, 1, (2,), dtype=np.float32)
+        self.observation_space = spaces.Box(-1, 1, (4,), dtype=np.float32)
 
     def reset(self, rand=False, pos=(300, 300)):
         self.cup.set_pos(pos)
@@ -71,17 +71,12 @@ class GameAI(gym.Env):
         return
 
     def reward_helper(self, z):
-        s = (abs(z.real)-self.string.length)/self.string.length
-        if z.imag < -self.cup.r:
-            s = -s-1
-        else:
-            s = s-2
-        return s
+        return -abs(phase(1.0j*z))
 
     def reward(self, state):
         if state == "win":
             print('WIN')
-            return 1
+            return 10000
         if state == "lose":
             return -2
         return self.reward_helper(self.ball.pos-self.cup.pos)
@@ -89,7 +84,8 @@ class GameAI(gym.Env):
     def observe(self):
         """returns the positions of the elements"""
         z = (self.ball.pos-self.cup.pos)/self.string.length
-        array = np.array([z.real, z.imag])
+        array = np.array([z.real, z.imag, self.ball.v.real /
+                          10000, self.ball.v.imag/10000])
         assert self.observation_space.contains(array)
         return array
 
