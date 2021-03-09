@@ -37,7 +37,7 @@ def draw_reward():
     plt.show()
 
 
-def lr(lr_0=0.00035, decay=1.1):
+def lr(lr_0=0.00045, decay=1.3):
     def f(remaining):  # remaining is the proportion of epochs to do (it starts at 1 and finishes at 0 when training ends)
         return lr_0 * 1/(1+decay*(1-remaining))
     return f
@@ -73,3 +73,5 @@ trained_agent(continuous=False, load='discrete')
 
 # continuous movement
 trained_agent(load='continuous')
+# trained_agent(load='continuous2')
+# trained_agent(load='continuous3')
