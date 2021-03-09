@@ -70,29 +70,21 @@ class GameAI(gym.Env):
             return 'lose'
         return
 
+    def reward_helper(self, z):
+        s = (abs(z.real)-self.string.length)/self.string.length
+        if z.imag < -self.cup.r:
+            s = -s-1
+        else:
+            s = s-2
+        return s
+
     def reward(self, state):
-        # bp = self.ball.get_pos()
-        # cp = self.cup.get_pos()
-        # if state == "win":
-        #     return 10000
-        # if state == "lose":
-        #     return -1
-        # if bp[1] < cp[1]-self.cup.r:
-        #     s = self.string.length*10/(1+abs(bp[0]-cp[0]))
-        # else:
-        #     s = abs((cp[0]-bp[0]))
-        # return s
-        bp = self.ball.get_pos()
-        cp = self.cup.get_pos()
         if state == "win":
+            print('WIN')
             return 1
         if state == "lose":
-            return -1
-        if bp[1] < cp[1]-self.cup.r:
-            s = 1/(1 + 10*abs(bp[0]-cp[0])/self.string.length)
-        else:
-            s = (abs((cp[0]-bp[0]))-self.string.length)/self.string.length
-        return s
+            return -2
+        return self.reward_helper(self.ball.pos-self.cup.pos)
 
     def observe(self):
         """returns the positions of the elements"""
